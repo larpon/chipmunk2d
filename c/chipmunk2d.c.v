@@ -25,9 +25,9 @@ $if prod {
 }
 
 #include "@VMODROOT/c/Chipmunk2D/include/chipmunk/chipmunk.h"
-// #include "chipmunk/chipmunk_structs.h"
-// #include "chipmunk/cpHastySpace.h"
-// #include "chipmunk/cpPolyline.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/chipmunk_structs.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpHastySpace.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpPolyline.h"
 // #include "chipmunk/cpMarch.h"
 // #include "chipmunk/chipmunk_unsafe.h"
 // #include "chipmunk/cpBB.h"

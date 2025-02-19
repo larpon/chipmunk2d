@@ -16,11 +16,11 @@ pub fn poly_shape_alloc() &PolyShape {
 }
 
 // @C: `CP_EXPORT cpPolyShape* cpPolyShapeInit(cpPolyShape *poly, cpBody *body, int count, const cpVect *verts, cpTransform transform, cpFloat radius)`
-fn C.cpPolyShapeInit(poly &PolyShape, body &Body, count int, const_verts &Vect, transform C.cpTransform, radius Float) &PolyShape
+fn C.cpPolyShapeInit(poly &PolyShape, body &Body, count int, const_verts &Vect, transform Transform, radius Float) &PolyShape
 
 // poly_shape_init : Initialize a polygon shape with rounded corners.
 // poly_shape_init : A convex hull will be created from the vertexes.
-pub fn poly_shape_init(poly &PolyShape, body &Body, count int, const_verts &Vect, transform C.cpTransform, radius Float) &PolyShape {
+pub fn poly_shape_init(poly &PolyShape, body &Body, count int, const_verts &Vect, transform Transform, radius Float) &PolyShape {
 	return C.cpPolyShapeInit(poly, body, count, const_verts, transform, radius)
 }
 
@@ -34,11 +34,11 @@ pub fn poly_shape_init_raw(poly &PolyShape, body &Body, count int, const_verts &
 }
 
 // @C: `CP_EXPORT cpShape* cpPolyShapeNew(cpBody *body, int count, const cpVect *verts, cpTransform transform, cpFloat radius)`
-fn C.cpPolyShapeNew(body &Body, count int, const_verts &Vect, transform C.cpTransform, radius Float) &Shape
+fn C.cpPolyShapeNew(body &Body, count int, const_verts &Vect, transform Transform, radius Float) &Shape
 
 // poly_shape_new : Allocate and initialize a polygon shape with rounded corners.
 // poly_shape_new : A convex hull will be created from the vertexes.
-pub fn poly_shape_new(body &Body, count int, const_verts &Vect, transform C.cpTransform, radius Float) &Shape {
+pub fn poly_shape_new(body &Body, count int, const_verts &Vect, transform Transform, radius Float) &Shape {
 	return C.cpPolyShapeNew(body, count, const_verts, transform, radius)
 }
 

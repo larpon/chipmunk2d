@@ -122,34 +122,34 @@ pub fn constraint_set_collide_bodies(constraint &Constraint, collide_bodies bool
 }
 
 // @C: `CP_EXPORT cpConstraintPreSolveFunc cpConstraintGetPreSolveFunc(const cpConstraint *constraint)`
-fn C.cpConstraintGetPreSolveFunc(const_constraint &Constraint) C.cpConstraintPreSolveFunc
+fn C.cpConstraintGetPreSolveFunc(const_constraint &Constraint) ConstraintPreSolveFunc
 
 // constraint_get_pre_solve_func : Get the pre-solve function that is called before the solver runs.
-pub fn constraint_get_pre_solve_func(const_constraint &Constraint) C.cpConstraintPreSolveFunc {
+pub fn constraint_get_pre_solve_func(const_constraint &Constraint) ConstraintPreSolveFunc {
 	return C.cpConstraintGetPreSolveFunc(const_constraint)
 }
 
 // @C: `CP_EXPORT void cpConstraintSetPreSolveFunc(cpConstraint *constraint, cpConstraintPreSolveFunc preSolveFunc)`
-fn C.cpConstraintSetPreSolveFunc(constraint &Constraint, pre_solve_func C.cpConstraintPreSolveFunc)
+fn C.cpConstraintSetPreSolveFunc(constraint &Constraint, pre_solve_func ConstraintPreSolveFunc)
 
 // constraint_set_pre_solve_func : Set the pre-solve function that is called before the solver runs.
-pub fn constraint_set_pre_solve_func(constraint &Constraint, pre_solve_func C.cpConstraintPreSolveFunc) {
+pub fn constraint_set_pre_solve_func(constraint &Constraint, pre_solve_func ConstraintPreSolveFunc) {
 	C.cpConstraintSetPreSolveFunc(constraint, pre_solve_func)
 }
 
 // @C: `CP_EXPORT cpConstraintPostSolveFunc cpConstraintGetPostSolveFunc(const cpConstraint *constraint)`
-fn C.cpConstraintGetPostSolveFunc(const_constraint &Constraint) C.cpConstraintPostSolveFunc
+fn C.cpConstraintGetPostSolveFunc(const_constraint &Constraint) ConstraintPostSolveFunc
 
 // constraint_get_post_solve_func : Get the post-solve function that is called before the solver runs.
-pub fn constraint_get_post_solve_func(const_constraint &Constraint) C.cpConstraintPostSolveFunc {
+pub fn constraint_get_post_solve_func(const_constraint &Constraint) ConstraintPostSolveFunc {
 	return C.cpConstraintGetPostSolveFunc(const_constraint)
 }
 
 // @C: `CP_EXPORT void cpConstraintSetPostSolveFunc(cpConstraint *constraint, cpConstraintPostSolveFunc postSolveFunc)`
-fn C.cpConstraintSetPostSolveFunc(constraint &Constraint, post_solve_func C.cpConstraintPostSolveFunc)
+fn C.cpConstraintSetPostSolveFunc(constraint &Constraint, post_solve_func ConstraintPostSolveFunc)
 
 // constraint_set_post_solve_func : Set the post-solve function that is called before the solver runs.
-pub fn constraint_set_post_solve_func(constraint &Constraint, post_solve_func C.cpConstraintPostSolveFunc) {
+pub fn constraint_set_post_solve_func(constraint &Constraint, post_solve_func ConstraintPostSolveFunc) {
 	C.cpConstraintSetPostSolveFunc(constraint, post_solve_func)
 }
 

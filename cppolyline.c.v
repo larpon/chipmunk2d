@@ -100,7 +100,7 @@ pub fn polyline_set_new() &PolylineSet {
 }
 
 // @C: `CP_EXPORT void cpPolylineSetDestroy(cpPolylineSet *set, cpBool freePolylines)`
-fn C.cpPolylineSetDestroy(set &PolylineSet, free_polylines bool, l) // C.cpBool
+fn C.cpPolylineSetDestroy(set &PolylineSet, free_polylines bool) // C.cpBool
 
 // polyline_set_destroy : Destroy a polyline set.
 pub fn polyline_set_destroy(set &PolylineSet, free_polylines bool) { // C.cpBool

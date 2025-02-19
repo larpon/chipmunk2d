@@ -137,11 +137,11 @@ pub fn body_get_type(body &Body) BodyType {
 }
 
 // @C: `CP_EXPORT void cpBodySetType(cpBody *body, cpBodyType type)`
-fn C.cpBodySetType(body &Body, type, BodyType)
+fn C.cpBodySetType(body &Body, typ BodyType)
 
 // body_set_type : Set the type of the body.
-pub fn body_set_type(body &Body, type BodyType) {
-	C.cpBodySetType(body, type)
+pub fn body_set_type(body &Body, typ BodyType) {
+	C.cpBodySetType(body, typ)
 }
 
 // @C: `CP_EXPORT cpSpace* cpBodyGetSpace(const cpBody *body)`
@@ -321,19 +321,19 @@ pub fn body_set_user_data(body &Body, user_data DataPointer) {
 }
 
 // @C: `CP_EXPORT void cpBodySetVelocityUpdateFunc(cpBody *body, cpBodyVelocityFunc velocityFunc)`
-fn C.cpBodySetVelocityUpdateFunc(body &Body, velocity_func C.cpBodyVelocityFunc)
+fn C.cpBodySetVelocityUpdateFunc(body &Body, velocity_func BodyVelocityFunc)
 
 // body_set_velocity_update_func : Set the callback used to update a body's velocity.
-pub fn body_set_velocity_update_func(body &Body, velocity_func C.cpBodyVelocityFunc) {
+pub fn body_set_velocity_update_func(body &Body, velocity_func BodyVelocityFunc) {
 	C.cpBodySetVelocityUpdateFunc(body, velocity_func)
 }
 
 // @C: `CP_EXPORT void cpBodySetPositionUpdateFunc(cpBody *body, cpBodyPositionFunc positionFunc)`
-fn C.cpBodySetPositionUpdateFunc(body &Body, position_func C.cpBodyPositionFunc)
+fn C.cpBodySetPositionUpdateFunc(body &Body, position_func BodyPositionFunc)
 
 // body_set_position_update_func : Set the callback used to update a body's position.
 // body_set_position_update_func : NOTE: It's not generally recommended to override this unless you call the default position update function.
-pub fn body_set_position_update_func(body &Body, position_func C.cpBodyPositionFunc) {
+pub fn body_set_position_update_func(body &Body, position_func BodyPositionFunc) {
 	C.cpBodySetPositionUpdateFunc(body, position_func)
 }
 
@@ -430,10 +430,10 @@ pub fn body_kinetic_energy(const_body &Body) Float {
 pub type BodyShapeIteratorFunc = fn (body &Body, shape &Shape, data voidptr)
 
 // @C: `CP_EXPORT void cpBodyEachShape(cpBody *body, cpBodyShapeIteratorFunc func, void *data)`
-fn C.cpBodyEachShape(body &Body, func C.cpBodyShapeIteratorFunc, data voidptr)
+fn C.cpBodyEachShape(body &Body, func BodyShapeIteratorFunc, data voidptr)
 
 // body_each_shape : Call @c func once for each shape attached to @c body and added to the space.
-pub fn body_each_shape(body &Body, func C.cpBodyShapeIteratorFunc, data voidptr) {
+pub fn body_each_shape(body &Body, func BodyShapeIteratorFunc, data voidptr) {
 	C.cpBodyEachShape(body, func, data)
 }
 
@@ -442,10 +442,10 @@ pub fn body_each_shape(body &Body, func C.cpBodyShapeIteratorFunc, data voidptr)
 pub type BodyConstraintIteratorFunc = fn (body &Body, constraint &Constraint, data voidptr)
 
 // @C: `CP_EXPORT void cpBodyEachConstraint(cpBody *body, cpBodyConstraintIteratorFunc func, void *data)`
-fn C.cpBodyEachConstraint(body &Body, func C.cpBodyConstraintIteratorFunc, data voidptr)
+fn C.cpBodyEachConstraint(body &Body, func BodyConstraintIteratorFunc, data voidptr)
 
 // body_each_constraint : Call @c func once for each constraint attached to @c body and added to the space.
-pub fn body_each_constraint(body &Body, func C.cpBodyConstraintIteratorFunc, data voidptr) {
+pub fn body_each_constraint(body &Body, func BodyConstraintIteratorFunc, data voidptr) {
 	C.cpBodyEachConstraint(body, func, data)
 }
 
@@ -454,9 +454,9 @@ pub fn body_each_constraint(body &Body, func C.cpBodyConstraintIteratorFunc, dat
 pub type BodyArbiterIteratorFunc = fn (body &Body, arbiter &Arbiter, data voidptr)
 
 // @C: `CP_EXPORT void cpBodyEachArbiter(cpBody *body, cpBodyArbiterIteratorFunc func, void *data)`
-fn C.cpBodyEachArbiter(body &Body, func C.cpBodyArbiterIteratorFunc, data voidptr)
+fn C.cpBodyEachArbiter(body &Body, func BodyArbiterIteratorFunc, data voidptr)
 
 // body_each_arbiter : Call @c func once for each arbiter that is currently active on the body.
-pub fn body_each_arbiter(body &Body, func C.cpBodyArbiterIteratorFunc, data voidptr) {
+pub fn body_each_arbiter(body &Body, func BodyArbiterIteratorFunc, data voidptr) {
 	C.cpBodyEachArbiter(body, func, data)
 }

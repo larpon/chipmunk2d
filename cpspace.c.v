@@ -42,18 +42,18 @@ pub mut:
 	typeB CollisionType
 	// This function is called when two shapes with types that match this collision handler begin colliding.
 	//
-	beginFunc C.cpCollisionBeginFunc
+	beginFunc CollisionBeginFunc
 	// This function is called each step when two shapes with types that match this collision handler are colliding.
 	// It's called before the collision solver runs so that you can affect a collision's outcome.
 	//
-	preSolveFunc C.cpCollisionPreSolveFunc
+	preSolveFunc CollisionPreSolveFunc
 	// This function is called each step when two shapes with types that match this collision handler are colliding.
 	// It's called after the collision solver runs so that you can read back information about the collision to trigger events in your game.
 	//
-	postSolveFunc C.cpCollisionPostSolveFunc
+	postSolveFunc CollisionPostSolveFunc
 	// This function is called when two shapes with types that match this collision handler stop colliding.
 	//
-	separateFunc C.cpCollisionSeparateFunc
+	separateFunc CollisionSeparateFunc
 	// This is a user definable context pointer that is passed to all of the collision handler functions.
 	//
 	userData DataPointer
@@ -303,11 +303,11 @@ pub fn space_add_collision_handler(space &Space, a CollisionType, b CollisionTyp
 }
 
 // @C: `CP_EXPORT cpCollisionHandler *cpSpaceAddWildcardHandler(cpSpace *space, cpCollisionType type)`
-fn C.cpSpaceAddWildcardHandler(space &Space, type, CollisionType) &CollisionHandler
+fn C.cpSpaceAddWildcardHandler(space &Space, typ CollisionType) &CollisionHandler
 
 // space_add_wildcard_handler : Create or return the existing wildcard collision handler for the specified type.
-pub fn space_add_wildcard_handler(space &Space, type CollisionType) &CollisionHandler {
-	return C.cpSpaceAddWildcardHandler(space, type)
+pub fn space_add_wildcard_handler(space &Space, typ CollisionType) &CollisionHandler {
+	return C.cpSpaceAddWildcardHandler(space, typ)
 }
 
 // @C: `CP_EXPORT cpShape* cpSpaceAddShape(cpSpace *space, cpShape *shape)`
@@ -388,13 +388,13 @@ pub fn space_contains_constraint(space &Space, constraint &Constraint) bool { //
 pub type PostStepFunc = fn (space &Space, key voidptr, data voidptr)
 
 // @C: `CP_EXPORT cpBool cpSpaceAddPostStepCallback(cpSpace *space, cpPostStepFunc func, void *key, void *data)`
-fn C.cpSpaceAddPostStepCallback(space &Space, func C.cpPostStepFunc, key voidptr, data voidptr) bool // C.cpBool
+fn C.cpSpaceAddPostStepCallback(space &Space, func PostStepFunc, key voidptr, data voidptr) bool // C.cpBool
 
 // space_add_post_step_callback : Schedule a post-step callback to be called when cpSpaceStep() finishes.
 // space_add_post_step_callback : You can only register one callback per unique value for @c key.
 // Returns true only if @c key has never been scheduled before.
 // It's possible to pass @c NULL for @c func if you only want to mark @c key as being used.
-pub fn space_add_post_step_callback(space &Space, func C.cpPostStepFunc, key voidptr, data voidptr) bool { // bool // C.cpBool
+pub fn space_add_post_step_callback(space &Space, func PostStepFunc, key voidptr, data voidptr) bool { // bool // C.cpBool
 	return C.cpSpaceAddPostStepCallback(space, func, key, data)
 }
 
@@ -403,10 +403,10 @@ pub fn space_add_post_step_callback(space &Space, func C.cpPostStepFunc, key voi
 pub type SpacePointQueryFunc = fn (shape &Shape, point Vect, distance Float, gradient Vect, data voidptr)
 
 // @C: `CP_EXPORT void cpSpacePointQuery(cpSpace *space, cpVect point, cpFloat maxDistance, cpShapeFilter filter, cpSpacePointQueryFunc func, void *data)`
-fn C.cpSpacePointQuery(space &Space, point Vect, max_distance Float, filter ShapeFilter, func C.cpSpacePointQueryFunc, data voidptr)
+fn C.cpSpacePointQuery(space &Space, point Vect, max_distance Float, filter ShapeFilter, func SpacePointQueryFunc, data voidptr)
 
 // space_point_query : Query the space at a point and call @c func for each shape found.
-pub fn space_point_query(space &Space, point Vect, max_distance Float, filter ShapeFilter, func C.cpSpacePointQueryFunc, data voidptr) {
+pub fn space_point_query(space &Space, point Vect, max_distance Float, filter ShapeFilter, func SpacePointQueryFunc, data voidptr) {
 	C.cpSpacePointQuery(space, point, max_distance, filter, func, data)
 }
 
@@ -423,10 +423,10 @@ pub fn space_point_query_nearest(space &Space, point Vect, max_distance Float, f
 pub type SpaceSegmentQueryFunc = fn (shape &Shape, point Vect, normal Vect, alpha Float, data voidptr)
 
 // @C: `CP_EXPORT void cpSpaceSegmentQuery(cpSpace *space, cpVect start, cpVect end, cpFloat radius, cpShapeFilter filter, cpSpaceSegmentQueryFunc func, void *data)`
-fn C.cpSpaceSegmentQuery(space &Space, start Vect, end Vect, radius Float, filter ShapeFilter, func C.cpSpaceSegmentQueryFunc, data voidptr)
+fn C.cpSpaceSegmentQuery(space &Space, start Vect, end Vect, radius Float, filter ShapeFilter, func SpaceSegmentQueryFunc, data voidptr)
 
 // space_segment_query : Perform a directed line segment query (like a raycast) against the space calling @c func for each shape intersected.
-pub fn space_segment_query(space &Space, start Vect, end Vect, radius Float, filter ShapeFilter, func C.cpSpaceSegmentQueryFunc, data voidptr) {
+pub fn space_segment_query(space &Space, start Vect, end Vect, radius Float, filter ShapeFilter, func SpaceSegmentQueryFunc, data voidptr) {
 	C.cpSpaceSegmentQuery(space, start, end, radius, filter, func, data)
 }
 
@@ -443,11 +443,11 @@ pub fn space_segment_query_first(space &Space, start Vect, end Vect, radius Floa
 pub type SpaceBBQueryFunc = fn (shape &Shape, data voidptr)
 
 // @C: `CP_EXPORT void cpSpaceBBQuery(cpSpace *space, cpBB bb, cpShapeFilter filter, cpSpaceBBQueryFunc func, void *data)`
-fn C.cpSpaceBBQuery(space &Space, bb BB, filter ShapeFilter, func C.cpSpaceBBQueryFunc, data voidptr)
+fn C.cpSpaceBBQuery(space &Space, bb BB, filter ShapeFilter, func SpaceBBQueryFunc, data voidptr)
 
 // space_bb_query : Perform a fast rectangle query on the space calling @c func for each shape found.
 // space_bb_query : Only the shape's bounding boxes are checked for overlap, not their full shape.
-pub fn space_bb_query(space &Space, bb BB, filter ShapeFilter, func C.cpSpaceBBQueryFunc, data voidptr) {
+pub fn space_bb_query(space &Space, bb BB, filter ShapeFilter, func SpaceBBQueryFunc, data voidptr) {
 	C.cpSpaceBBQuery(space, bb, filter, func, data)
 }
 
@@ -456,10 +456,10 @@ pub fn space_bb_query(space &Space, bb BB, filter ShapeFilter, func C.cpSpaceBBQ
 pub type SpaceShapeQueryFunc = fn (shape &Shape, points &ContactPointSet, data voidptr)
 
 // @C: `CP_EXPORT cpBool cpSpaceShapeQuery(cpSpace *space, cpShape *shape, cpSpaceShapeQueryFunc func, void *data)`
-fn C.cpSpaceShapeQuery(space &Space, shape &Shape, func C.cpSpaceShapeQueryFunc, data voidptr) bool // C.cpBool
+fn C.cpSpaceShapeQuery(space &Space, shape &Shape, func SpaceShapeQueryFunc, data voidptr) bool // C.cpBool
 
 // space_shape_query : Query a space for any shapes overlapping the given shape and call @c func for each shape found.
-pub fn space_shape_query(space &Space, shape &Shape, func C.cpSpaceShapeQueryFunc, data voidptr) bool { // bool // C.cpBool
+pub fn space_shape_query(space &Space, shape &Shape, func SpaceShapeQueryFunc, data voidptr) bool { // bool // C.cpBool
 	return C.cpSpaceShapeQuery(space, shape, func, data)
 }
 
@@ -468,10 +468,10 @@ pub fn space_shape_query(space &Space, shape &Shape, func C.cpSpaceShapeQueryFun
 pub type SpaceBodyIteratorFunc = fn (body &Body, data voidptr)
 
 // @C: `CP_EXPORT void cpSpaceEachBody(cpSpace *space, cpSpaceBodyIteratorFunc func, void *data)`
-fn C.cpSpaceEachBody(space &Space, func C.cpSpaceBodyIteratorFunc, data voidptr)
+fn C.cpSpaceEachBody(space &Space, func SpaceBodyIteratorFunc, data voidptr)
 
 // space_each_body : Call @c func for each body in the space.
-pub fn space_each_body(space &Space, func C.cpSpaceBodyIteratorFunc, data voidptr) {
+pub fn space_each_body(space &Space, func SpaceBodyIteratorFunc, data voidptr) {
 	C.cpSpaceEachBody(space, func, data)
 }
 
@@ -480,10 +480,10 @@ pub fn space_each_body(space &Space, func C.cpSpaceBodyIteratorFunc, data voidpt
 pub type SpaceShapeIteratorFunc = fn (shape &Shape, data voidptr)
 
 // @C: `CP_EXPORT void cpSpaceEachShape(cpSpace *space, cpSpaceShapeIteratorFunc func, void *data)`
-fn C.cpSpaceEachShape(space &Space, func C.cpSpaceShapeIteratorFunc, data voidptr)
+fn C.cpSpaceEachShape(space &Space, func SpaceShapeIteratorFunc, data voidptr)
 
 // space_each_shape : Call @c func for each shape in the space.
-pub fn space_each_shape(space &Space, func C.cpSpaceShapeIteratorFunc, data voidptr) {
+pub fn space_each_shape(space &Space, func SpaceShapeIteratorFunc, data voidptr) {
 	C.cpSpaceEachShape(space, func, data)
 }
 
@@ -492,10 +492,10 @@ pub fn space_each_shape(space &Space, func C.cpSpaceShapeIteratorFunc, data void
 pub type SpaceConstraintIteratorFunc = fn (constraint &Constraint, data voidptr)
 
 // @C: `CP_EXPORT void cpSpaceEachConstraint(cpSpace *space, cpSpaceConstraintIteratorFunc func, void *data)`
-fn C.cpSpaceEachConstraint(space &Space, func C.cpSpaceConstraintIteratorFunc, data voidptr)
+fn C.cpSpaceEachConstraint(space &Space, func SpaceConstraintIteratorFunc, data voidptr)
 
 // space_each_constraint : Call @c func for each shape in the space.
-pub fn space_each_constraint(space &Space, func C.cpSpaceConstraintIteratorFunc, data voidptr) {
+pub fn space_each_constraint(space &Space, func SpaceConstraintIteratorFunc, data voidptr) {
 	C.cpSpaceEachConstraint(space, func, data)
 }
 
@@ -590,19 +590,19 @@ pub struct C.cpSpaceDebugDrawOptions {
 pub mut:
 	// Function that will be invoked to draw circles.
 	//
-	drawCircle C.cpSpaceDebugDrawCircleImpl
+	drawCircle SpaceDebugDrawCircleImpl
 	// Function that will be invoked to draw line segments.
 	//
-	drawSegment C.cpSpaceDebugDrawSegmentImpl
+	drawSegment SpaceDebugDrawSegmentImpl
 	// Function that will be invoked to draw thick line segments.
 	//
-	drawFatSegment C.cpSpaceDebugDrawFatSegmentImpl
+	drawFatSegment SpaceDebugDrawFatSegmentImpl
 	// Function that will be invoked to draw convex polygons.
 	//
-	drawPolygon C.cpSpaceDebugDrawPolygonImpl
+	drawPolygon SpaceDebugDrawPolygonImpl
 	// Function that will be invoked to draw dots.
 	//
-	drawDot C.cpSpaceDebugDrawDotImpl
+	drawDot SpaceDebugDrawDotImpl
 	// Flags that request which things to draw (collision shapes, constraints, contact points).
 	//
 	flags SpaceDebugDrawFlags
@@ -611,7 +611,7 @@ pub mut:
 	shapeOutlineColor SpaceDebugColor
 	// Function that decides what fill color to draw shapes using.
 	//
-	colorForShape C.cpSpaceDebugDrawColorForShapeImpl
+	colorForShape SpaceDebugDrawColorForShapeImpl
 	// Color passed to drawing functions for constraints.
 	//
 	constraintColor SpaceDebugColor

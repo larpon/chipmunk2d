@@ -24,8 +24,8 @@ pub struct C.cpBody {
 pub mut:
 	// Integration functions
 	//
-	velocity_func C.cpBodyVelocityFunc
-	position_func C.cpBodyPositionFunc
+	velocity_func BodyVelocityFunc
+	position_func BodyPositionFunc
 	// mass and it's inverse
 	//
 	m     Float
@@ -47,7 +47,7 @@ pub mut:
 	a         Float
 	w         Float
 	t         Float
-	transform C.cpTransform
+	transform Transform
 	userData  DataPointer
 	// "pseudo-velocities" used for eliminating overlap.
 	// Erin Catto has some papers that talk about what these are.
@@ -97,15 +97,15 @@ pub type Arbiter = C.cpArbiter
 
 // ShapeType is C.cpShapeType
 pub enum ShapeType {
-	circle_shape  = C.CP_CIRCLE_SHAPE
-	segment_shape = C.CP_SEGMENT_SHAPE
-	poly_shape    = C.CP_POLY_SHAPE
-	num_shapes    = C.CP_NUM_SHAPES
+	circle_shape  //= C.CP_CIRCLE_SHAPE
+	segment_shape //= C.CP_SEGMENT_SHAPE
+	poly_shape    //= C.CP_POLY_SHAPE
+	num_shapes    //= C.CP_NUM_SHAPES
 }
 
 // ShapeCacheDataImpl is currently undocumented
 // @C: typedef cpBB (*cpShapeCacheDataImpl)(cpShape *shape, cpTransform transform);
-pub type ShapeCacheDataImpl = fn (shape &Shape, transform C.cpTransform) BB
+pub type ShapeCacheDataImpl = fn (shape &Shape, transform Transform) BB
 
 // ShapeDestroyImpl is currently undocumented
 // @C: typedef void (*cpShapeDestroyImpl)(cpShape *shape);
@@ -119,21 +119,21 @@ pub type ShapePointQueryImpl = fn (const_shape &Shape, p Vect, info &PointQueryI
 // @C: typedef void (*cpShapeSegmentQueryImpl)(const cpShape *shape, cpVect a, cpVect b, cpFloat radius, cpSegmentQueryInfo *info);
 pub type ShapeSegmentQueryImpl = fn (const_shape &Shape, a Vect, b Vect, radius Float, info &SegmentQueryInfo)
 
-@[noinit; typedef]
-pub struct C.cpShapeClass {
-	// NOTE: Opaque type
-}
-
-pub type ShapeClass = C.cpShapeClass
+// @[noinit; typedef]
+// pub struct C.cpShapeClass {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type ShapeClass = C.cpShapeClass
 
 @[typedef]
 pub struct C.cpShapeClass {
 pub mut:
 	type         ShapeType
-	cacheData    C.cpShapeCacheDataImpl
-	destroy      C.cpShapeDestroyImpl
-	pointQuery   C.cpShapePointQueryImpl
-	segmentQuery C.cpShapeSegmentQueryImpl
+	cacheData    ShapeCacheDataImpl
+	destroy      ShapeDestroyImpl
+	pointQuery   ShapePointQueryImpl
+	segmentQuery ShapeSegmentQueryImpl
 }
 
 pub type ShapeClass = C.cpShapeClass
@@ -156,7 +156,7 @@ pub mut:
 	filter   ShapeFilter
 	next     &Shape = unsafe { nil }
 	prev     &Shape = unsafe { nil }
-	hashid   C.cpHashValue
+	hashid   HashValue
 }
 
 pub type Shape = C.cpShape
@@ -222,10 +222,10 @@ pub type ConstraintGetImpulseImpl = fn (constraint &Constraint) Float
 @[typedef]
 pub struct C.cpConstraintClass {
 pub mut:
-	preStep            C.cpConstraintPreStepImpl
-	applyCachedImpulse C.cpConstraintApplyCachedImpulseImpl
-	applyImpulse       C.cpConstraintApplyImpulseImpl
-	getImpulse         C.cpConstraintGetImpulseImpl
+	preStep            ConstraintPreStepImpl
+	applyCachedImpulse ConstraintApplyCachedImpulseImpl
+	applyImpulse       ConstraintApplyImpulseImpl
+	getImpulse         ConstraintGetImpulseImpl
 }
 
 pub type ConstraintClass = C.cpConstraintClass
@@ -243,8 +243,8 @@ pub mut:
 	errorBias     Float
 	maxBias       Float
 	collideBodies bool // C.cpBool
-	preSolve      C.cpConstraintPreSolveFunc
-	postSolve     C.cpConstraintPostSolveFunc
+	preSolve      ConstraintPreSolveFunc
+	postSolve     ConstraintPostSolveFunc
 	userData      DataPointer
 }
 
@@ -328,7 +328,7 @@ pub mut:
 	restLength      Float
 	stiffness       Float
 	damping         Float
-	springForceFunc C.cpDampedSpringForceFunc
+	springForceFunc DampedSpringForceFunc
 	target_vrn      Float
 	v_coef          Float
 	r1              Vect
@@ -347,7 +347,7 @@ pub mut:
 	restAngle        Float
 	stiffness        Float
 	damping          Float
-	springTorqueFunc C.cpDampedRotarySpringTorqueFunc
+	springTorqueFunc DampedRotarySpringTorqueFunc
 	target_wrn       Float
 	w_coef           Float
 	iSum             Float
@@ -426,7 +426,7 @@ pub mut:
 	staticBodies         &Array = unsafe { nil }
 	rousedBodies         &Array = unsafe { nil }
 	sleepingComponents   &Array = unsafe { nil }
-	shapeIDCounter       C.cpHashValue
+	shapeIDCounter       HashValue
 	staticShapes         &SpatialIndex        = unsafe { nil }
 	dynamicShapes        &SpatialIndex        = unsafe { nil }
 	constraints          &Array               = unsafe { nil }
@@ -450,7 +450,7 @@ pub type Space = C.cpSpace
 @[typedef]
 pub struct C.cpPostStepCallback {
 pub mut:
-	func C.cpPostStepFunc
+	func PostStepFunc
 	key  voidptr
 	data voidptr
 }

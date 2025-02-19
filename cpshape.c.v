@@ -58,15 +58,15 @@ pub mut:
 	// Two objects with the same non-zero group value do not collide.
 	// This is generally used to group objects in a composite object together to disable self collisions.
 	//
-	group C.cpGroup
+	group Group
 	// A bitmask of user definable categories that this object belongs to.
 	// The category/mask combinations of both objects in a collision must agree for a collision to occur.
 	//
-	categories C.cpBitmask
+	categories Bitmask
 	// A bitmask of user definable category types that this object object collides with.
 	// The category/mask combinations of both objects in a collision must agree for a collision to occur.
 	//
-	mask C.cpBitmask
+	mask Bitmask
 }
 
 pub type ShapeFilter = C.cpShapeFilter
@@ -96,10 +96,10 @@ pub fn shape_cache_bb(shape &Shape) BB {
 }
 
 // @C: `CP_EXPORT cpBB cpShapeUpdate(cpShape *shape, cpTransform transform)`
-fn C.cpShapeUpdate(shape &Shape, transform C.cpTransform) BB
+fn C.cpShapeUpdate(shape &Shape, transform Transform) BB
 
 // shape_update : Update, cache and return the bounding box of a shape with an explicit transformation.
-pub fn shape_update(shape &Shape, transform C.cpTransform) BB {
+pub fn shape_update(shape &Shape, transform Transform) BB {
 	return C.cpShapeUpdate(shape, transform)
 }
 

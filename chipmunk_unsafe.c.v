@@ -42,10 +42,10 @@ pub fn segment_shape_set_radius(shape &Shape, radius Float) {
 }
 
 // @C: `CP_EXPORT void cpPolyShapeSetVerts(cpShape *shape, int count, cpVect *verts, cpTransform transform)`
-fn C.cpPolyShapeSetVerts(shape &Shape, count int, verts &Vect, transform C.cpTransform)
+fn C.cpPolyShapeSetVerts(shape &Shape, count int, verts &Vect, transform Transform)
 
 // poly_shape_set_verts : Set the vertexes of a poly shape.
-pub fn poly_shape_set_verts(shape &Shape, count int, verts &Vect, transform C.cpTransform) {
+pub fn poly_shape_set_verts(shape &Shape, count int, verts &Vect, transform Transform) {
 	C.cpPolyShapeSetVerts(shape, count, verts, transform)
 }
 

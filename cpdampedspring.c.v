@@ -125,17 +125,17 @@ pub fn damped_spring_set_damping(constraint &Constraint, damping Float) {
 }
 
 // @C: `CP_EXPORT cpDampedSpringForceFunc cpDampedSpringGetSpringForceFunc(const cpConstraint *constraint)`
-fn C.cpDampedSpringGetSpringForceFunc(const_constraint &Constraint) C.cpDampedSpringForceFunc
+fn C.cpDampedSpringGetSpringForceFunc(const_constraint &Constraint) DampedSpringForceFunc
 
 // damped_spring_get_spring_force_func : Get the damping of the spring.
-pub fn damped_spring_get_spring_force_func(const_constraint &Constraint) C.cpDampedSpringForceFunc {
+pub fn damped_spring_get_spring_force_func(const_constraint &Constraint) DampedSpringForceFunc {
 	return C.cpDampedSpringGetSpringForceFunc(const_constraint)
 }
 
 // @C: `CP_EXPORT void cpDampedSpringSetSpringForceFunc(cpConstraint *constraint, cpDampedSpringForceFunc springForceFunc)`
-fn C.cpDampedSpringSetSpringForceFunc(constraint &Constraint, spring_force_func C.cpDampedSpringForceFunc)
+fn C.cpDampedSpringSetSpringForceFunc(constraint &Constraint, spring_force_func DampedSpringForceFunc)
 
 // damped_spring_set_spring_force_func : Set the damping of the spring.
-pub fn damped_spring_set_spring_force_func(constraint &Constraint, spring_force_func C.cpDampedSpringForceFunc) {
+pub fn damped_spring_set_spring_force_func(constraint &Constraint, spring_force_func DampedSpringForceFunc) {
 	C.cpDampedSpringSetSpringForceFunc(constraint, spring_force_func)
 }

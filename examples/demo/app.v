@@ -2,7 +2,6 @@ module main
 
 import chipmunk2d as cp
 import time
-import sokol
 import sokol.sapp
 import sokol.gfx
 import sokol.sgl
@@ -31,17 +30,17 @@ fn (mut cs ChipmunkSpace) init() {
 
 	// Create an empty space.
 	mut space := cp.space_new()
-	space.set_gravity(gravity)
+	cp.space_set_gravity(space, gravity)
 
 	cs.space = space
 	// Add a static line segment shape for the ground.
 	// We'll make it slightly tilted so the ball will roll off.
 	// We attach it to a static body to tell Chipmunk it shouldn't be movable.
-	mut ground := cp.segment_shape_new(space.get_static_body(), cp.v(-20, 500), cp.v(1100 + 20,
-		500 - 150), 0)
-	ground.set_friction(1)
-	ground.set_elasticity(0.8)
-	space.add_shape(ground)
+	mut ground := cp.segment_shape_new(cp.space_get_static_body(space), cp.v(-20, 500),
+		cp.v(1100 + 20, 500 - 150), 0)
+	cp.shape_set_friction(ground, 1)
+	cp.shape_set_elasticity(ground, 0.8)
+	cp.space_add_shape(space, ground)
 
 	cs.ground = ground
 
@@ -59,35 +58,38 @@ fn (mut cs ChipmunkSpace) init() {
 
 	// The cpSpaceAdd*() functions return the thing that you are adding.
 	// It's convenient to create and add an object in one line.
-	mut ball_body := space.add_body(cp.body_new(mass, moment))
-	ball_body.set_position(cp.v(750, 15))
+	mut ball_body := cp.space_add_body(space, cp.body_new(mass, moment))
+	cp.body_set_position(ball_body, cp.v(750, 15))
 
 	cs.ball_body = ball_body
 	// Now we create the collision shape for the ball.
 	// You can create multiple collision shapes that point to the same body.
 	// They will all be attached to the body and move around to follow it.
-	mut ball_shape := space.add_shape(cp.circle_shape_new(ball_body, radius, cp.vzero))
-	ball_shape.set_friction(0.5)
-	ball_shape.set_elasticity(0.8)
+	mut ball_shape := cp.space_add_shape(space, cp.circle_shape_new(ball_body, radius,
+		cp.vzero))
+	cp.shape_set_friction(ball_shape, 0.5)
+	cp.shape_set_elasticity(ball_shape, 0.8)
 
 	cs.ball_shape = ball_shape
 }
 
 fn (mut cs ChipmunkSpace) free() {
 	// Clean up our objects and exit!
-	cs.ball_shape.free()
-	cs.ball_body.free()
-	cs.ground.free()
-	cs.space.free()
+	unsafe {
+		cp.shape_free(cs.ball_shape)
+		cp.body_free(cs.ball_body)
+		cp.shape_free(cs.ground)
+		cp.space_free(cs.space)
+	}
 }
 
 fn (mut cs ChipmunkSpace) step() {
-	cs.space.step(cs.time_step)
+	cp.space_step(cs.space, cs.time_step)
 }
 
 @[heap]
 struct App {
-	pass_action gfx.PassAction = gfx.create_clear_pass(0.5, 0.5, 0.5, 1.0)
+	pass_action gfx.PassAction = gfx.create_clear_pass_action(0.5, 0.5, 0.5, 1.0)
 mut:
 	d          Debug
 	ticks      i64
@@ -126,7 +128,7 @@ fn (mut a App) cleanup() {
 
 fn (mut a App) run() {
 	title := 'Chipmunk2D demo'
-	desc := C.sapp_desc{
+	desc := sapp.Desc{
 		width:               a.width
 		height:              a.height
 		user_data:           a
@@ -187,26 +189,31 @@ fn (mut a App) draw() {
 	// mut brush := grey
 
 	mut ball_body := a.cms.ball_body
-	pos := ball_body.get_position()
+	pos := cp.body_get_position(ball_body)
+	pos_x := f32(pos.x)
+	pos_y := f32(pos.y)
 	// vel := ball_body.get_velocity()
-	angle := ball_body.get_angle()
-	radius := cp.circle_shape_get_radius(a.cms.ball_shape)
+	angle := f32(cp.body_get_angle(ball_body))
+	radius := f32(cp.circle_shape_get_radius(a.cms.ball_shape))
 
 	g_a_pos := cp.segment_shape_get_a(a.cms.ground)
+	g_a_pos_x := f32(g_a_pos.x)
+	g_a_pos_y := f32(g_a_pos.y)
 	g_b_pos := cp.segment_shape_get_b(a.cms.ground)
+	g_b_pos_x := f32(g_b_pos.x)
+	g_b_pos_y := f32(g_b_pos.y)
 
 	// println("Time is $time ball_body is at ($pos.x,$pos.y). It's velocity is ($vel.x,$vel.y)")
 
-	black.line(g_a_pos.x, g_a_pos.y, g_b_pos.x, g_b_pos.y)
+	black.line(g_a_pos_x, g_a_pos_y, g_b_pos_x, g_b_pos_y)
 
-	red.circle(pos.x, pos.y, radius, 40)
+	red.circle(pos_x, pos_y, radius, 40)
 
 	draw.push_matrix()
-	draw.translate(pos.x, pos.y, 0.0)
+	draw.translate(pos_x, pos_y, 0.0)
 	draw.rotate(angle, 0.0, 0.0, 1.0)
-	draw.translate(-pos.x, -pos.y, 0.0)
-
-	black.line(pos.x, pos.y, f32(pos.x), f32(pos.y - radius))
+	draw.translate(-pos_x, -pos_y, 0.0)
+	black.line(pos_x, pos_y, pos_x, pos_y - radius)
 	draw.pop_matrix()
 
 	/*
@@ -222,10 +229,10 @@ fn (mut a App) draw() {
 		a.cms.step()
 	}
 
-	if pos.x + radius < 0 {
-		ball_body.set_position(cp.v(750, -radius))
-		ball_body.set_moment(1)
-		ball_body.set_velocity(cp.v(0, 0))
+	if pos_x + radius < 0 {
+		cp.body_set_position(ball_body, cp.v(750, -radius))
+		cp.body_set_moment(ball_body, 1)
+		cp.body_set_velocity(ball_body, cp.v(0, 0))
 	}
 }
 
@@ -289,7 +296,7 @@ fn (mut a App) on_key_up(ev &C.sapp_event) {
 }
 
 fn init(user_data voidptr) {
-	mut app := &App(user_data)
+	mut app := unsafe { &App(user_data) }
 	desc := sapp.create_desc()
 	gfx.setup(&desc)
 	sgl_desc := sgl.Desc{
@@ -299,14 +306,20 @@ fn init(user_data voidptr) {
 	mut pipdesc := gfx.PipelineDesc{}
 	unsafe { vmemset(&pipdesc, 0, int(sizeof(pipdesc))) }
 
-	color_state := gfx.ColorState{
+	color_state := gfx.ColorTargetState{
 		blend: gfx.BlendState{
 			enabled:        true
-			src_factor_rgb: gfx.BlendFactor(.src_alpha)
-			dst_factor_rgb: gfx.BlendFactor(.one_minus_src_alpha)
+			src_factor_rgb: .src_alpha
+			dst_factor_rgb: .one_minus_src_alpha
 		}
 	}
 	pipdesc.colors[0] = color_state
+
+	// pipdesc.depth = gfx.DepthState{
+	// 	write_enabled: true
+	// 	compare:       .less_equal
+	// }
+	// pipdesc.cull_mode = .back
 
 	app.alpha_pip = sgl.make_pipeline(&pipdesc)
 
@@ -314,13 +327,13 @@ fn init(user_data voidptr) {
 }
 
 fn cleanup(user_data voidptr) {
-	mut app := &App(user_data)
+	mut app := unsafe { &App(user_data) }
 	app.cleanup()
 	gfx.shutdown()
 }
 
 fn frame(user_data voidptr) {
-	mut app := &App(user_data)
+	mut app := unsafe { &App(user_data) }
 	app.frame++
 
 	t := time.ticks()
@@ -337,7 +350,8 @@ fn frame(user_data voidptr) {
 	app.handle_input()
 	app.draw()
 
-	gfx.begin_default_pass(&app.pass_action, app.width, app.height)
+	pass := sapp.create_default_pass(app.pass_action)
+	gfx.begin_pass(&pass)
 	sgl.default_pipeline()
 	sgl.draw()
 	gfx.end_pass()

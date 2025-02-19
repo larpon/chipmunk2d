@@ -23,12 +23,12 @@ CP_EXPORT void cpMessage(const char *condition, const char *file, int line, int 
 
 // TODO Function: #define cpAssertHard(__condition__, ...) if(!(__condition__)){cpMessage(#__condition__, __FILE__, __LINE__, 1, 1, __VA_ARGS__); abort();}
 
-@[noinit; typedef]
-pub struct C.cpArray {
-	// NOTE: Opaque type
-}
-
-pub type Array = C.cpArray
+// @[noinit; typedef]
+// pub struct C.cpArray {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type Array = C.cpArray
 
 @[noinit; typedef]
 pub struct C.cpHashSet {
@@ -37,146 +37,146 @@ pub struct C.cpHashSet {
 
 pub type HashSet = C.cpHashSet
 
-@[noinit; typedef]
-pub struct C.cpBody {
-	// NOTE: Opaque type
-}
-
-pub type Body = C.cpBody
-
-@[noinit; typedef]
-pub struct C.cpShape {
-	// NOTE: Opaque type
-}
-
-pub type Shape = C.cpShape
-
-@[noinit; typedef]
-pub struct C.cpCircleShape {
-	// NOTE: Opaque type
-}
-
-pub type CircleShape = C.cpCircleShape
-
-@[noinit; typedef]
-pub struct C.cpSegmentShape {
-	// NOTE: Opaque type
-}
-
-pub type SegmentShape = C.cpSegmentShape
-
-@[noinit; typedef]
-pub struct C.cpPolyShape {
-	// NOTE: Opaque type
-}
-
-pub type PolyShape = C.cpPolyShape
-
-@[noinit; typedef]
-pub struct C.cpConstraint {
-	// NOTE: Opaque type
-}
-
-pub type Constraint = C.cpConstraint
-
-@[noinit; typedef]
-pub struct C.cpPinJoint {
-	// NOTE: Opaque type
-}
-
-pub type PinJoint = C.cpPinJoint
-
-@[noinit; typedef]
-pub struct C.cpSlideJoint {
-	// NOTE: Opaque type
-}
-
-pub type SlideJoint = C.cpSlideJoint
-
-@[noinit; typedef]
-pub struct C.cpPivotJoint {
-	// NOTE: Opaque type
-}
-
-pub type PivotJoint = C.cpPivotJoint
-
-@[noinit; typedef]
-pub struct C.cpGrooveJoint {
-	// NOTE: Opaque type
-}
-
-pub type GrooveJoint = C.cpGrooveJoint
-
-@[noinit; typedef]
-pub struct C.cpDampedSpring {
-	// NOTE: Opaque type
-}
-
-pub type DampedSpring = C.cpDampedSpring
-
-@[noinit; typedef]
-pub struct C.cpDampedRotarySpring {
-	// NOTE: Opaque type
-}
-
-pub type DampedRotarySpring = C.cpDampedRotarySpring
-
-@[noinit; typedef]
-pub struct C.cpRotaryLimitJoint {
-	// NOTE: Opaque type
-}
-
-pub type RotaryLimitJoint = C.cpRotaryLimitJoint
-
-@[noinit; typedef]
-pub struct C.cpRatchetJoint {
-	// NOTE: Opaque type
-}
-
-pub type RatchetJoint = C.cpRatchetJoint
-
-@[noinit; typedef]
-pub struct C.cpGearJoint {
-	// NOTE: Opaque type
-}
-
-pub type GearJoint = C.cpGearJoint
-
-@[noinit; typedef]
-pub struct C.cpSimpleMotorJoint {
-	// NOTE: Opaque type
-}
-
-pub type SimpleMotorJoint = C.cpSimpleMotorJoint
-
-@[noinit; typedef]
-pub struct C.cpCollisionHandler {
-	// NOTE: Opaque type
-}
-
-pub type CollisionHandler = C.cpCollisionHandler
-
-@[noinit; typedef]
-pub struct C.cpContactPointSet {
-	// NOTE: Opaque type
-}
-
-pub type ContactPointSet = C.cpContactPointSet
-
-@[noinit; typedef]
-pub struct C.cpArbiter {
-	// NOTE: Opaque type
-}
-
-pub type Arbiter = C.cpArbiter
-
-@[noinit; typedef]
-pub struct C.cpSpace {
-	// NOTE: Opaque type
-}
-
-pub type Space = C.cpSpace
-
+// @[noinit; typedef]
+// pub struct C.cpBody {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type Body = C.cpBody
+//
+// @[noinit; typedef]
+// pub struct C.cpShape {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type Shape = C.cpShape
+//
+// @[noinit; typedef]
+// pub struct C.cpCircleShape {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type CircleShape = C.cpCircleShape
+//
+// @[noinit; typedef]
+// pub struct C.cpSegmentShape {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type SegmentShape = C.cpSegmentShape
+//
+// @[noinit; typedef]
+// pub struct C.cpPolyShape {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type PolyShape = C.cpPolyShape
+//
+// @[noinit; typedef]
+// pub struct C.cpConstraint {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type Constraint = C.cpConstraint
+//
+// @[noinit; typedef]
+// pub struct C.cpPinJoint {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type PinJoint = C.cpPinJoint
+//
+// @[noinit; typedef]
+// pub struct C.cpSlideJoint {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type SlideJoint = C.cpSlideJoint
+//
+// @[noinit; typedef]
+// pub struct C.cpPivotJoint {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type PivotJoint = C.cpPivotJoint
+//
+// @[noinit; typedef]
+// pub struct C.cpGrooveJoint {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type GrooveJoint = C.cpGrooveJoint
+//
+// @[noinit; typedef]
+// pub struct C.cpDampedSpring {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type DampedSpring = C.cpDampedSpring
+//
+// @[noinit; typedef]
+// pub struct C.cpDampedRotarySpring {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type DampedRotarySpring = C.cpDampedRotarySpring
+//
+// @[noinit; typedef]
+// pub struct C.cpRotaryLimitJoint {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type RotaryLimitJoint = C.cpRotaryLimitJoint
+//
+// @[noinit; typedef]
+// pub struct C.cpRatchetJoint {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type RatchetJoint = C.cpRatchetJoint
+//
+// @[noinit; typedef]
+// pub struct C.cpGearJoint {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type GearJoint = C.cpGearJoint
+//
+// @[noinit; typedef]
+// pub struct C.cpSimpleMotorJoint {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type SimpleMotorJoint = C.cpSimpleMotorJoint
+//
+// @[noinit; typedef]
+// pub struct C.cpCollisionHandler {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type CollisionHandler = C.cpCollisionHandler
+//
+// @[noinit; typedef]
+// pub struct C.cpContactPointSet {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type ContactPointSet = C.cpContactPointSet
+//
+// @[noinit; typedef]
+// pub struct C.cpArbiter {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type Arbiter = C.cpArbiter
+//
+// @[noinit; typedef]
+// pub struct C.cpSpace {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type Space = C.cpSpace
+//
 // Chipmunk 7.0.3
 pub const version_major = C.CP_VERSION_MAJOR // 7
 

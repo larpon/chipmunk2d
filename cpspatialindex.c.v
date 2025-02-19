@@ -25,12 +25,12 @@ pub type SpatialIndexQueryFunc = fn (obj1 voidptr, obj2 voidptr, id CollisionID,
 // @C: typedef cpFloat (*cpSpatialIndexSegmentQueryFunc)(void *obj1, void *obj2, void *data);
 pub type SpatialIndexSegmentQueryFunc = fn (obj1 voidptr, obj2 voidptr, data voidptr) Float
 
-@[noinit; typedef]
-pub struct C.cpSpatialIndexClass {
-	// NOTE: Opaque type
-}
-
-pub type SpatialIndexClass = C.cpSpatialIndexClass
+// @[noinit; typedef]
+// pub struct C.cpSpatialIndexClass {
+// 	// NOTE: Opaque type
+// }
+//
+// pub type SpatialIndexClass = C.cpSpatialIndexClass
 
 @[noinit; typedef]
 pub struct C.cpSpatialIndex {
@@ -41,16 +41,16 @@ pub type SpatialIndex = C.cpSpatialIndex
 
 // @private
 //
-@[typedef]
-pub struct C.cpSpatialIndex {
-pub mut:
-	klass  &SpatialIndexClass = unsafe { nil }
-	bbfunc C.cpSpatialIndexBBFunc
-	// TODO 	staticIndex,* &SpatialIndex = unsafe { nil }
-	dynamicIndex &SpatialIndex = unsafe { nil }
-}
-
-pub type SpatialIndex = C.cpSpatialIndex
+// @[typedef]
+// pub struct C.cpSpatialIndex {
+// pub mut:
+// 	klass  &SpatialIndexClass = unsafe { nil }
+// 	bbfunc SpatialIndexBBFunc
+// 	staticIndex &SpatialIndex = unsafe { nil }
+// 	dynamicIndex &SpatialIndex = unsafe { nil }
+// }
+//
+// pub type SpatialIndex = C.cpSpatialIndex
 
 @[noinit; typedef]
 pub struct C.cpSpaceHash {
@@ -68,18 +68,18 @@ pub fn space_hash_alloc() &SpaceHash {
 }
 
 // @C: `CP_EXPORT cpSpatialIndex* cpSpaceHashInit(cpSpaceHash *hash, cpFloat celldim, int numcells, cpSpatialIndexBBFunc bbfunc, cpSpatialIndex *staticIndex)`
-fn C.cpSpaceHashInit(hash &SpaceHash, celldim Float, numcells int, bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
+fn C.cpSpaceHashInit(hash &SpaceHash, celldim Float, numcells int, bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
 
 // space_hash_init : Initialize a spatial hash.
-pub fn space_hash_init(hash &SpaceHash, celldim Float, numcells int, bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
+pub fn space_hash_init(hash &SpaceHash, celldim Float, numcells int, bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
 	return C.cpSpaceHashInit(hash, celldim, numcells, bbfunc, static_index)
 }
 
 // @C: `CP_EXPORT cpSpatialIndex* cpSpaceHashNew(cpFloat celldim, int cells, cpSpatialIndexBBFunc bbfunc, cpSpatialIndex *staticIndex)`
-fn C.cpSpaceHashNew(celldim Float, cells int, bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
+fn C.cpSpaceHashNew(celldim Float, cells int, bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
 
 // space_hash_new : Allocate and initialize a spatial hash.
-pub fn space_hash_new(celldim Float, cells int, bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
+pub fn space_hash_new(celldim Float, cells int, bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
 	return C.cpSpaceHashNew(celldim, cells, bbfunc, static_index)
 }
 
@@ -110,18 +110,18 @@ pub fn bb_tree_alloc() &BBTree {
 }
 
 // @C: `CP_EXPORT cpSpatialIndex* cpBBTreeInit(cpBBTree *tree, cpSpatialIndexBBFunc bbfunc, cpSpatialIndex *staticIndex)`
-fn C.cpBBTreeInit(tree &BBTree, bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
+fn C.cpBBTreeInit(tree &BBTree, bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
 
 // bb_tree_init : Initialize a bounding box tree.
-pub fn bb_tree_init(tree &BBTree, bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
+pub fn bb_tree_init(tree &BBTree, bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
 	return C.cpBBTreeInit(tree, bbfunc, static_index)
 }
 
 // @C: `CP_EXPORT cpSpatialIndex* cpBBTreeNew(cpSpatialIndexBBFunc bbfunc, cpSpatialIndex *staticIndex)`
-fn C.cpBBTreeNew(bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
+fn C.cpBBTreeNew(bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
 
 // bb_tree_new : Allocate and initialize a bounding box tree.
-pub fn bb_tree_new(bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
+pub fn bb_tree_new(bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
 	return C.cpBBTreeNew(bbfunc, static_index)
 }
 
@@ -139,10 +139,10 @@ pub fn bb_tree_optimize(index &SpatialIndex) {
 pub type BBTreeVelocityFunc = fn (obj voidptr) Vect
 
 // @C: `CP_EXPORT void cpBBTreeSetVelocityFunc(cpSpatialIndex *index, cpBBTreeVelocityFunc func)`
-fn C.cpBBTreeSetVelocityFunc(index &SpatialIndex, func C.cpBBTreeVelocityFunc)
+fn C.cpBBTreeSetVelocityFunc(index &SpatialIndex, func BBTreeVelocityFunc)
 
 // bb_tree_set_velocity_func : Set the velocity function for the bounding box tree to enable temporal coherence.
-pub fn bb_tree_set_velocity_func(index &SpatialIndex, func C.cpBBTreeVelocityFunc) {
+pub fn bb_tree_set_velocity_func(index &SpatialIndex, func BBTreeVelocityFunc) {
 	C.cpBBTreeSetVelocityFunc(index, func)
 }
 
@@ -162,18 +162,18 @@ pub fn sweep1_d_alloc() &Sweep1D {
 }
 
 // @C: `CP_EXPORT cpSpatialIndex* cpSweep1DInit(cpSweep1D *sweep, cpSpatialIndexBBFunc bbfunc, cpSpatialIndex *staticIndex)`
-fn C.cpSweep1DInit(sweep &Sweep1D, bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
+fn C.cpSweep1DInit(sweep &Sweep1D, bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
 
 // sweep1_d_init : Initialize a 1D sort and sweep broadphase.
-pub fn sweep1_d_init(sweep &Sweep1D, bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
+pub fn sweep1_d_init(sweep &Sweep1D, bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
 	return C.cpSweep1DInit(sweep, bbfunc, static_index)
 }
 
 // @C: `CP_EXPORT cpSpatialIndex* cpSweep1DNew(cpSpatialIndexBBFunc bbfunc, cpSpatialIndex *staticIndex)`
-fn C.cpSweep1DNew(bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
+fn C.cpSweep1DNew(bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex
 
 // sweep1_d_new : Allocate and initialize a 1D sort and sweep broadphase.
-pub fn sweep1_d_new(bbfunc C.cpSpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
+pub fn sweep1_d_new(bbfunc SpatialIndexBBFunc, static_index &SpatialIndex) &SpatialIndex {
 	return C.cpSweep1DNew(bbfunc, static_index)
 }
 
@@ -187,19 +187,19 @@ pub type SpatialIndexCountImpl = fn (index &SpatialIndex) int
 
 // SpatialIndexEachImpl is currently undocumented
 // @C: typedef void (*cpSpatialIndexEachImpl)(cpSpatialIndex *index, cpSpatialIndexIteratorFunc func, void *data);
-pub type SpatialIndexEachImpl = fn (index &SpatialIndex, func C.cpSpatialIndexIteratorFunc, data voidptr)
+pub type SpatialIndexEachImpl = fn (index &SpatialIndex, func SpatialIndexIteratorFunc, data voidptr)
 
 // SpatialIndexContainsImpl is currently undocumented
 // @C: typedef cpBool (*cpSpatialIndexContainsImpl)(cpSpatialIndex *index, void *obj, cpHashValue hashid);
-pub type SpatialIndexContainsImpl = fn (index &SpatialIndex, obj voidptr, hashid C.cpHashValue) bool // C.cpBool
+pub type SpatialIndexContainsImpl = fn (index &SpatialIndex, obj voidptr, hashid HashValue) bool // C.cpBool
 
 // SpatialIndexInsertImpl is currently undocumented
 // @C: typedef void (*cpSpatialIndexInsertImpl)(cpSpatialIndex *index, void *obj, cpHashValue hashid);
-pub type SpatialIndexInsertImpl = fn (index &SpatialIndex, obj voidptr, hashid C.cpHashValue)
+pub type SpatialIndexInsertImpl = fn (index &SpatialIndex, obj voidptr, hashid HashValue)
 
 // SpatialIndexRemoveImpl is currently undocumented
 // @C: typedef void (*cpSpatialIndexRemoveImpl)(cpSpatialIndex *index, void *obj, cpHashValue hashid);
-pub type SpatialIndexRemoveImpl = fn (index &SpatialIndex, obj voidptr, hashid C.cpHashValue)
+pub type SpatialIndexRemoveImpl = fn (index &SpatialIndex, obj voidptr, hashid HashValue)
 
 // SpatialIndexReindexImpl is currently undocumented
 // @C: typedef void (*cpSpatialIndexReindexImpl)(cpSpatialIndex *index);
@@ -207,34 +207,34 @@ pub type SpatialIndexReindexImpl = fn (index &SpatialIndex)
 
 // SpatialIndexReindexObjectImpl is currently undocumented
 // @C: typedef void (*cpSpatialIndexReindexObjectImpl)(cpSpatialIndex *index, void *obj, cpHashValue hashid);
-pub type SpatialIndexReindexObjectImpl = fn (index &SpatialIndex, obj voidptr, hashid C.cpHashValue)
+pub type SpatialIndexReindexObjectImpl = fn (index &SpatialIndex, obj voidptr, hashid HashValue)
 
 // SpatialIndexReindexQueryImpl is currently undocumented
 // @C: typedef void (*cpSpatialIndexReindexQueryImpl)(cpSpatialIndex *index, cpSpatialIndexQueryFunc func, void *data);
-pub type SpatialIndexReindexQueryImpl = fn (index &SpatialIndex, func C.cpSpatialIndexQueryFunc, data voidptr)
+pub type SpatialIndexReindexQueryImpl = fn (index &SpatialIndex, func SpatialIndexQueryFunc, data voidptr)
 
 // SpatialIndexQueryImpl is currently undocumented
 // @C: typedef void (*cpSpatialIndexQueryImpl)(cpSpatialIndex *index, void *obj, cpBB bb, cpSpatialIndexQueryFunc func, void *data);
-pub type SpatialIndexQueryImpl = fn (index &SpatialIndex, obj voidptr, bb BB, func C.cpSpatialIndexQueryFunc, data voidptr)
+pub type SpatialIndexQueryImpl = fn (index &SpatialIndex, obj voidptr, bb BB, func SpatialIndexQueryFunc, data voidptr)
 
 // SpatialIndexSegmentQueryImpl is currently undocumented
 // @C: typedef void (*cpSpatialIndexSegmentQueryImpl)(cpSpatialIndex *index, void *obj, cpVect a, cpVect b, cpFloat t_exit, cpSpatialIndexSegmentQueryFunc func, void *data);
-pub type SpatialIndexSegmentQueryImpl = fn (index &SpatialIndex, obj voidptr, a Vect, b Vect, t_exit Float, func C.cpSpatialIndexSegmentQueryFunc, data voidptr)
+pub type SpatialIndexSegmentQueryImpl = fn (index &SpatialIndex, obj voidptr, a Vect, b Vect, t_exit Float, func SpatialIndexSegmentQueryFunc, data voidptr)
 
 @[typedef]
 pub struct C.cpSpatialIndexClass {
 pub mut:
-	destroy       C.cpSpatialIndexDestroyImpl
-	count         C.cpSpatialIndexCountImpl
-	each          C.cpSpatialIndexEachImpl
-	contains      C.cpSpatialIndexContainsImpl
-	insert        C.cpSpatialIndexInsertImpl
-	remove        C.cpSpatialIndexRemoveImpl
-	reindex       C.cpSpatialIndexReindexImpl
-	reindexObject C.cpSpatialIndexReindexObjectImpl
-	reindexQuery  C.cpSpatialIndexReindexQueryImpl
-	query         C.cpSpatialIndexQueryImpl
-	segmentQuery  C.cpSpatialIndexSegmentQueryImpl
+	destroy       SpatialIndexDestroyImpl
+	count         SpatialIndexCountImpl
+	each          SpatialIndexEachImpl
+	contains      SpatialIndexContainsImpl
+	insert        SpatialIndexInsertImpl
+	remove        SpatialIndexRemoveImpl
+	reindex       SpatialIndexReindexImpl
+	reindexObject SpatialIndexReindexObjectImpl
+	reindexQuery  SpatialIndexReindexQueryImpl
+	query         SpatialIndexQueryImpl
+	segmentQuery  SpatialIndexSegmentQueryImpl
 }
 
 pub type SpatialIndexClass = C.cpSpatialIndexClass
@@ -248,9 +248,9 @@ pub fn spatial_index_free(index &SpatialIndex) {
 }
 
 // @C: `CP_EXPORT void cpSpatialIndexCollideStatic(cpSpatialIndex *dynamicIndex, cpSpatialIndex *staticIndex, cpSpatialIndexQueryFunc func, void *data)`
-fn C.cpSpatialIndexCollideStatic(dynamic_index &SpatialIndex, static_index &SpatialIndex, func C.cpSpatialIndexQueryFunc, data voidptr)
+fn C.cpSpatialIndexCollideStatic(dynamic_index &SpatialIndex, static_index &SpatialIndex, func SpatialIndexQueryFunc, data voidptr)
 
 // spatial_index_collide_static : Collide the objects in @c dynamicIndex against the objects in @c staticIndex using the query callback function.
-pub fn spatial_index_collide_static(dynamic_index &SpatialIndex, static_index &SpatialIndex, func C.cpSpatialIndexQueryFunc, data voidptr) {
+pub fn spatial_index_collide_static(dynamic_index &SpatialIndex, static_index &SpatialIndex, func SpatialIndexQueryFunc, data voidptr) {
 	C.cpSpatialIndexCollideStatic(dynamic_index, static_index, func, data)
 }

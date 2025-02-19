@@ -92,17 +92,17 @@ pub fn damped_rotary_spring_set_damping(constraint &Constraint, damping Float) {
 }
 
 // @C: `CP_EXPORT cpDampedRotarySpringTorqueFunc cpDampedRotarySpringGetSpringTorqueFunc(const cpConstraint *constraint)`
-fn C.cpDampedRotarySpringGetSpringTorqueFunc(const_constraint &Constraint) C.cpDampedRotarySpringTorqueFunc
+fn C.cpDampedRotarySpringGetSpringTorqueFunc(const_constraint &Constraint) DampedRotarySpringTorqueFunc
 
 // damped_rotary_spring_get_spring_torque_func : Get the damping of the spring.
-pub fn damped_rotary_spring_get_spring_torque_func(const_constraint &Constraint) C.cpDampedRotarySpringTorqueFunc {
+pub fn damped_rotary_spring_get_spring_torque_func(const_constraint &Constraint) DampedRotarySpringTorqueFunc {
 	return C.cpDampedRotarySpringGetSpringTorqueFunc(const_constraint)
 }
 
 // @C: `CP_EXPORT void cpDampedRotarySpringSetSpringTorqueFunc(cpConstraint *constraint, cpDampedRotarySpringTorqueFunc springTorqueFunc)`
-fn C.cpDampedRotarySpringSetSpringTorqueFunc(constraint &Constraint, spring_torque_func C.cpDampedRotarySpringTorqueFunc)
+fn C.cpDampedRotarySpringSetSpringTorqueFunc(constraint &Constraint, spring_torque_func DampedRotarySpringTorqueFunc)
 
 // damped_rotary_spring_set_spring_torque_func : Set the damping of the spring.
-pub fn damped_rotary_spring_set_spring_torque_func(constraint &Constraint, spring_torque_func C.cpDampedRotarySpringTorqueFunc) {
+pub fn damped_rotary_spring_set_spring_torque_func(constraint &Constraint, spring_torque_func DampedRotarySpringTorqueFunc) {
 	C.cpDampedRotarySpringSetSpringTorqueFunc(constraint, spring_torque_func)
 }
