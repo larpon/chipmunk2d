@@ -1,4 +1,6 @@
 // Copyright(C) 2021 Lars Pontoppidan. All rights reserved.
+// Use of this source code is governed by an MIT license
+// that can be found in the LICENSE file.
 module c
 
 // Chipmunk2D v7.0.3 https://github.com/slembcke/Chipmunk2D @ 68d1f31
@@ -8,7 +10,6 @@ pub const used_import = 1 // TODO
 pub const infinity = C.INFINITY
 
 #flag -I @VMODROOT/c/Chipmunk2D/include
-// #flag -I @VMODROOT/c/Chipmunk2D/include/chipmunk
 // #flag -L @VMODROOT/Chipmunk2D/src // libchipmunk.a / libchipmunk*.so
 #flag -lm
 // #flag -lpthread
