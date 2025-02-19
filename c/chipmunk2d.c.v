@@ -8,15 +8,16 @@ pub const used_import = 1 // TODO
 pub const infinity = C.INFINITY
 
 #flag -I @VMODROOT/c/Chipmunk2D/include
-//#flag -L @VMODROOT/Chipmunk2D/src // libchipmunk.a / libchipmunk*.so
+// #flag -I @VMODROOT/c/Chipmunk2D/include/chipmunk
+// #flag -L @VMODROOT/Chipmunk2D/src // libchipmunk.a / libchipmunk*.so
 #flag -lm
-//#flag -lpthread
+// #flag -lpthread
 
 // Link static:
-//#flag -l:libchipmunk.a // gcc + clang
+// #flag -l:libchipmunk.a // gcc + clang
 // Link dynamic:
-//#flag -Wl,-R@VMODROOT/Chipmunk2D/src
-//#flag -lchipmunk
+// #flag -Wl,-R@VMODROOT/Chipmunk2D/src
+// #flag -lchipmunk
 
 #define CP_USE_CGTYPES 0
 
@@ -25,12 +26,36 @@ $if prod {
 }
 
 #include "@VMODROOT/c/Chipmunk2D/include/chipmunk/chipmunk.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/chipmunk_ffi.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/chipmunk_private.h"
 #include "@VMODROOT/c/Chipmunk2D/include/chipmunk/chipmunk_structs.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/chipmunk_types.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/chipmunk_unsafe.h"
+//
+// #include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpArbiter.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpBB.h"
+// #include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpBody.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpConstraint.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpDampedRotarySpring.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpDampedSpring.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpGearJoint.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpGrooveJoint.h"
 #include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpHastySpace.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpMarch.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpPinJoint.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpPivotJoint.h"
 #include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpPolyline.h"
-// #include "chipmunk/cpMarch.h"
-// #include "chipmunk/chipmunk_unsafe.h"
-// #include "chipmunk/cpBB.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpPolyShape.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpRatchetJoint.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpRobust.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpRotaryLimitJoint.h"
+// #include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpShape.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpSimpleMotor.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpSlideJoint.h"
+// #include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpSpace.h"
+// #include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpSpatialIndex.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpTransform.h"
+#include "@VMODROOT/c/Chipmunk2D/include/chipmunk/cpVect.h"
 
 #flag @VMODROOT/c/Chipmunk2D/src/chipmunk.o
 #flag @VMODROOT/c/Chipmunk2D/src/cpArbiter.o
