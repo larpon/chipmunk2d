@@ -4,9 +4,6 @@
 module c
 
 // Chipmunk2D v7.0.3 https://github.com/slembcke/Chipmunk2D @ 68d1f31
-
-pub const used_import = 1 // TODO
-
 pub const infinity = C.INFINITY
 
 #flag -I @VMODROOT/c/Chipmunk2D/include
