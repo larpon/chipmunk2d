@@ -17,4 +17,11 @@ Run the demo example with:
 
 ```bash
 v run ~/.vmodules/chipmunk2d/examples/demo/
+
 ```
+
+## Notes
+
+Upstream:
+
+Chipmunk2D v7.0.3 https://github.com/slembcke/Chipmunk2D @ d0239ef

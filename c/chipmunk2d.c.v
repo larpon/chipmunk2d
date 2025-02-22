@@ -3,7 +3,6 @@
 // that can be found in the LICENSE file.
 module c
 
-// Chipmunk2D v7.0.3 https://github.com/slembcke/Chipmunk2D @ 68d1f31
 pub const infinity = C.INFINITY
 
 #flag -I @VMODROOT/c/Chipmunk2D/include
