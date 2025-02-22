@@ -8,7 +8,7 @@ The module strives to support 100% of the API.
 ## Install
 
 ```bash
-git clone https://github.com/larpon/chipmunk2d.git ~/.vmodules/chipmunk2d
+v install https://github.com/larpon/chipmunk2d.git
 ```
 
 ## Running
