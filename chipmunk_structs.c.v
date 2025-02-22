@@ -435,7 +435,7 @@ pub mut:
 	cachedArbiters       &HashSet             = unsafe { nil }
 	pooledArbiters       &Array               = unsafe { nil }
 	allocatedBuffers     &Array               = unsafe { nil }
-	int                  u32  // locked
+	locked               int  // locked
 	usesWildcards        bool // C.cpBool
 	collisionHandlers    &HashSet = unsafe { nil }
 	defaultHandler       CollisionHandler
