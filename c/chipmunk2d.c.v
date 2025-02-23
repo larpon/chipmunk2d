@@ -7,7 +7,9 @@ pub const infinity = C.INFINITY
 
 #flag -I @VMODROOT/c/Chipmunk2D/include
 // #flag -L @VMODROOT/Chipmunk2D/src // libchipmunk.a / libchipmunk*.so
-#flag -lm
+$if !windows {
+	#flag -lm
+}
 // #flag -lpthread
 
 // Link static:
