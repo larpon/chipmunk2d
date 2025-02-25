@@ -1,18 +1,25 @@
 module main
 
+import gg
+import gx
 import chipmunk2d as cp
 import time
-import sokol.sapp
-import sokol.gfx
-import sokol.sgl
-import sgldraw as draw
+import math
 
 fn main() {
-	mut app := &App{
-		width:  1100
-		height: 700
-	}
-	app.run()
+	mut app := &App{}
+	app.gg = gg.new_context(
+		bg_color:     gx.rgb(127, 127, 127)
+		width:        1100
+		height:       700
+		window_title: 'Chipmunk2D Demo'
+		frame_fn:     frame
+		init_fn:      init
+		cleanup_fn:   cleanup
+		event_fn:     event
+		user_data:    app
+	)
+	app.gg.run()
 }
 
 struct ChipmunkSpace {
@@ -44,7 +51,7 @@ fn (mut cs ChipmunkSpace) init() {
 
 	cs.ground = ground
 
-	// Now let's make a ball that falls onto the line and rolls off.
+	// Now let's make a ball that fall onto the line and roll off.
 	// First we need to make a cpBody to hold the physical properties of the object.
 	// These include the mass, position, velocity, angle, etc. of the object.
 	// Then we attach collision shapes to the cpBody to give it a size and shape.
@@ -89,28 +96,21 @@ fn (mut cs ChipmunkSpace) step() {
 
 @[heap]
 struct App {
-	pass_action gfx.PassAction = gfx.create_clear_pass_action(0.5, 0.5, 0.5, 1.0)
 mut:
-	d          Debug
-	ticks      i64
-	dt         f32
-	width      int
-	height     int
-	frame      i64
-	last       i64
-	pause      bool
-	alpha_pip  sgl.Pipeline
-	keys_state map[sapp.KeyCode]bool
-	ready      bool
+	gg    &gg.Context = unsafe { nil }
+	ticks i64
+	dt    f32
+	frame i64
+	last  i64
+	pause bool
+	ready bool
 	//
 	cms ChipmunkSpace
 }
 
-fn (mut a App) init() {
+fn init(mut a App) {
 	a.frame = 0
 	a.last = time.ticks()
-
-	sgl.load_pipeline(a.alpha_pip)
 
 	a.cms = ChipmunkSpace{}
 	a.cms.init()
@@ -118,47 +118,8 @@ fn (mut a App) init() {
 	a.ready = true
 }
 
-fn (mut a App) quit() {
-	sapp.quit()
-}
-
-fn (mut a App) cleanup() {
+fn cleanup(mut a App) {
 	a.cms.free()
-}
-
-fn (mut a App) run() {
-	title := 'Chipmunk2D demo'
-	desc := sapp.Desc{
-		width:               a.width
-		height:              a.height
-		user_data:           a
-		init_userdata_cb:    init
-		frame_userdata_cb:   frame
-		event_userdata_cb:   event
-		window_title:        title.str
-		html5_canvas_name:   title.str
-		cleanup_userdata_cb: cleanup
-	}
-	sapp.run(&desc)
-}
-
-fn (mut a App) on_resized() {
-}
-
-fn (mut a App) handle_input() {
-	/*
-	if a.key_is_held(.right) {
-		a.rx += 10
-	}
-	if a.key_is_held(.left) {
-		a.rx -= 10
-	}
-	if a.key_is_held(.up) {
-		a.ry -= 10
-	}
-	if a.key_is_held(.down) {
-		a.ry += 10
-	}*/
 }
 
 fn (mut a App) draw() {
@@ -166,33 +127,11 @@ fn (mut a App) draw() {
 		return
 	}
 
-	a.d.plng(.draw | .flood, @STRUCT + '.' + @FN + '() called...')
-
-	sgl.defaults()
-	sgl.matrix_mode_projection()
-	sgl.ortho(0, f32(a.width), f32(a.height), 0.0, -1.0, 1.0)
-
-	black := draw.Shape{
-		colors: draw.Colors{draw.rgb(0, 0, 0), draw.rgba(255, 255, 255, 127)}
-	}
-
-	red := draw.Shape{
-		colors: draw.Colors{draw.rgb(255, 0, 0), draw.rgba(255, 255, 255, 127)}
-	}
-
-	/*
-	grey := draw.Shape{
-		colors: draw.brush_colors( draw.rgb(127, 127, 127) )
-	}
-	*/
-
-	// mut brush := grey
-
 	mut ball_body := a.cms.ball_body
 	pos := cp.body_get_position(ball_body)
 	pos_x := f32(pos.x)
 	pos_y := f32(pos.y)
-	// vel := ball_body.get_velocity()
+	// vel := cp.body_get_velocity(ball_body)
 	angle := f32(cp.body_get_angle(ball_body))
 	radius := f32(cp.circle_shape_get_radius(a.cms.ball_shape))
 
@@ -203,27 +142,22 @@ fn (mut a App) draw() {
 	g_b_pos_x := f32(g_b_pos.x)
 	g_b_pos_y := f32(g_b_pos.y)
 
-	// println("Time is $time ball_body is at ($pos.x,$pos.y). It's velocity is ($vel.x,$vel.y)")
+	// println("Time is ${a.ticks} ball_body is at (${pos.x},${pos.y}). It's velocity is (${vel.x},${vel.y})")
 
-	black.line(g_a_pos_x, g_a_pos_y, g_b_pos_x, g_b_pos_y)
+	a.gg.draw_line(g_a_pos_x, g_a_pos_y, g_b_pos_x, g_b_pos_y, gx.black)
 
-	red.circle(pos_x, pos_y, radius, 40)
+	a.gg.draw_circle_filled(pos_x, pos_y, radius, gx.red)
+	a.gg.draw_circle_empty(pos_x, pos_y, radius, gx.white)
 
-	draw.push_matrix()
-	draw.translate(pos_x, pos_y, 0.0)
-	draw.rotate(angle, 0.0, 0.0, 1.0)
-	draw.translate(-pos_x, -pos_y, 0.0)
-	black.line(pos_x, pos_y, pos_x, pos_y - radius)
-	draw.pop_matrix()
+	origin_x, origin_y := pos_x, pos_y
+	theta := angle
+	r_x :=
+		math.cosf(theta) * (pos_x - origin_x) - math.sinf(theta) * ((pos_y - radius) - origin_y) +
+		origin_x
+	r_y := math.sinf(theta) * (pos_x - origin_x) +
+		math.cosf(theta) * ((pos_y - radius) - origin_y) + origin_y
 
-	/*
-	if a.d.all(.draw) {
-		debug_brush := draw.Brush{
-			fill: .outline
-			colors: draw.brush_colors(draw.rgba(0, 0, 125, 25))
-		}
-		draw.rectangle(a.rx, a.ry, a.size_w, a.size_h, debug_brush)
-	}*/
+	a.gg.draw_line(pos_x, pos_y, r_x, r_y, gx.white)
 
 	if !a.pause {
 		a.cms.step()
@@ -236,153 +170,34 @@ fn (mut a App) draw() {
 	}
 }
 
-fn (a App) key_is_held(kc sapp.KeyCode) bool {
-	return kc in a.keys_state.keys() && a.keys_state[kc]
-}
-
-fn (mut a App) on_key_down(ev &C.sapp_event) {
-	a.keys_state[ev.key_code] = true
-
-	if ev.key_code == .p {
-		a.pause = !a.pause
-	}
-
-	// Debug input
-	if a.key_is_held(.period) {
-		if ev.key_code == .comma {
-			eprintln(a.d.flags)
-			return
-		}
-
-		if ev.key_code == .f {
-			a.d.toggle(.flood)
-		}
-
-		// Debug draw control
-		if a.key_is_held(.d) {
-			a.d.on(.draw)
-
-			if ev.key_code == .minus || a.key_is_held(.minus) {
-				a.d.off(.draw)
-			} else {
+fn event(e &gg.Event, mut a App) {
+	match e.typ {
+		.key_down {
+			match e.key_code {
+				.escape, .q {
+					a.gg.quit()
+				}
+				.p {
+					a.pause = !a.pause
+				}
+				else {}
 			}
 		}
-
-		// Debug print control
-		if a.key_is_held(.p) {
-			a.d.on(.print)
-
-			if ev.key_code == .a {
-				a.d.toggle(.app)
-			} else if ev.key_code == .i {
-				a.d.toggle(.input)
-			} else if ev.key_code == .minus || a.key_is_held(.minus) {
-				a.d.pln(.debug_state, 'print off')
-				a.d.off(.print)
-			} else {
-			}
-		}
+		else {}
 	}
 }
 
-fn (mut a App) on_key_up(ev &C.sapp_event) {
-	a.keys_state[ev.key_code] = false
+fn frame(mut a App) {
+	a.gg.begin()
 
-	// Handle quit event
-	if ev.key_code == .escape || ev.key_code == .q {
-		a.quit()
-		return
-	}
-}
-
-fn init(user_data voidptr) {
-	mut app := unsafe { &App(user_data) }
-	desc := sapp.create_desc()
-	gfx.setup(&desc)
-	sgl_desc := sgl.Desc{
-		max_vertices: 50 * 65536
-	}
-	sgl.setup(&sgl_desc)
-	mut pipdesc := gfx.PipelineDesc{}
-	unsafe { vmemset(&pipdesc, 0, int(sizeof(pipdesc))) }
-
-	color_state := gfx.ColorTargetState{
-		blend: gfx.BlendState{
-			enabled:        true
-			src_factor_rgb: .src_alpha
-			dst_factor_rgb: .one_minus_src_alpha
-		}
-	}
-	pipdesc.colors[0] = color_state
-
-	// pipdesc.depth = gfx.DepthState{
-	// 	write_enabled: true
-	// 	compare:       .less_equal
-	// }
-	// pipdesc.cull_mode = .back
-
-	app.alpha_pip = sgl.make_pipeline(&pipdesc)
-
-	app.init()
-}
-
-fn cleanup(user_data voidptr) {
-	mut app := unsafe { &App(user_data) }
-	app.cleanup()
-	gfx.shutdown()
-}
-
-fn frame(user_data voidptr) {
-	mut app := unsafe { &App(user_data) }
-	app.frame++
+	a.frame++
 
 	t := time.ticks()
-	app.ticks = t
-	app.dt = f32(t - app.last) / 1000.0
+	a.ticks = t
+	a.dt = f32(t - a.last) / 1000.0
 
-	if app.width != sapp.width() || app.height != sapp.height() {
-		app.d.pln(.app, 'resized from ${app.width}x${app.height} to ${sapp.width()}x${sapp.height()}')
-		app.on_resized()
-		app.width = sapp.width()
-		app.height = sapp.height()
-	}
+	a.draw()
 
-	app.handle_input()
-	app.draw()
-
-	pass := sapp.create_default_pass(app.pass_action)
-	gfx.begin_pass(&pass)
-	sgl.default_pipeline()
-	sgl.draw()
-	gfx.end_pass()
-	gfx.commit()
-
-	app.last = t
-}
-
-fn event(ev &C.sapp_event, mut app App) {
-	if ev.@type == .mouse_move {
-		//
-	}
-	if ev.@type == .mouse_up || ev.@type == .mouse_down {
-		if ev.mouse_button == .left {
-			is_pressed := ev.@type == .mouse_down
-			if is_pressed {
-				//
-			}
-		}
-	}
-	if ev.@type == .key_up {
-		app.on_key_up(ev)
-	}
-	if ev.@type == .key_down {
-		app.on_key_down(ev)
-	}
-	if ev.@type == .touches_began || ev.@type == .touches_moved {
-		if ev.num_touches > 0 {
-			touch_point := ev.touches[0]
-			app.d.pln(.input, '${touch_point}')
-			//
-		}
-	}
+	a.gg.end()
+	a.last = t
 }
