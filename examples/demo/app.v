@@ -1,7 +1,6 @@
 module main
 
 import gg
-import gx
 import chipmunk2d as cp
 import time
 import math
@@ -9,7 +8,7 @@ import math
 fn main() {
 	mut app := &App{}
 	app.gg = gg.new_context(
-		bg_color:     gx.rgb(127, 127, 127)
+		bg_color:     gg.rgb(127, 127, 127)
 		width:        1100
 		height:       700
 		window_title: 'Chipmunk2D Demo'
@@ -144,10 +143,10 @@ fn (mut a App) draw() {
 
 	// println("Time is ${a.ticks} ball_body is at (${pos.x},${pos.y}). It's velocity is (${vel.x},${vel.y})")
 
-	a.gg.draw_line(g_a_pos_x, g_a_pos_y, g_b_pos_x, g_b_pos_y, gx.black)
+	a.gg.draw_line(g_a_pos_x, g_a_pos_y, g_b_pos_x, g_b_pos_y, gg.black)
 
-	a.gg.draw_circle_filled(pos_x, pos_y, radius, gx.red)
-	a.gg.draw_circle_empty(pos_x, pos_y, radius, gx.white)
+	a.gg.draw_circle_filled(pos_x, pos_y, radius, gg.red)
+	a.gg.draw_circle_empty(pos_x, pos_y, radius, gg.white)
 
 	origin_x, origin_y := pos_x, pos_y
 	theta := angle
@@ -157,7 +156,7 @@ fn (mut a App) draw() {
 	r_y := math.sinf(theta) * (pos_x - origin_x) +
 		math.cosf(theta) * ((pos_y - radius) - origin_y) + origin_y
 
-	a.gg.draw_line(pos_x, pos_y, r_x, r_y, gx.white)
+	a.gg.draw_line(pos_x, pos_y, r_x, r_y, gg.white)
 
 	if !a.pause {
 		a.cms.step()
